@@ -1,62 +1,120 @@
-Multi-Threaded Proxy Server in C
-This project delivers a multi-threaded proxy server, built entirely in C. It draws inspiration for its HTTP parsing from the foundational work found in this Proxy Server repository.
-Project Insights
-Introduction to the Proxy Server
-This proxy server acts as an intermediary between your browser and the internet. When you make a request, it first goes to the proxy, which then forwards it to the destination server. The response from the server returns to the proxy, and only then is it sent back to your browser. This architecture allows for various powerful features.
-How Our Proxy Handles Requests
-The core functionality of our proxy server involves managing and processing web requests. Here's a simplified view of its operational flow:
-Leveraging Multi-threading for Concurrency
-To efficiently handle multiple client requests simultaneously, we've implemented multi-threading. Our approach specifically utilizes semaphores for thread synchronization, a more streamlined choice compared to condition variables or pthread_join().
-While pthread_join() requires a specific thread ID to wait for, semaphores (with sem_wait() and sem_post()) offer a simpler, parameter-free mechanism for managing thread access to shared resources, making them an excellent fit for this project.
-Why Build a Proxy Server?
-This project was developed to provide a deeper understanding of several key networking and concurrency concepts:
- * Request Flow: Grasping how web requests travel from a local machine to a remote server.
- * Concurrent Handling: Learning to manage and respond to numerous client requests at once.
- * Concurrency Control: Implementing locking procedures to ensure data integrity in multi-threaded environments.
- * Caching Mechanisms: Exploring the concept of web caches and their role in improving performance.
-Beyond learning, proxy servers offer practical benefits:
- * Performance Enhancement: They can significantly speed up Browse and reduce server load through caching.
- * Content Filtering: Proxies can restrict access to specific websites, useful for network administrators.
- * Anonymity: A well-configured proxy can mask the client's original IP address, enhancing privacy.
- * Security: Proxies can be modified to encrypt requests, adding a layer of security against eavesdropping.
-Key OS Components Utilized
-Our proxy server makes extensive use of the following operating system components:
- * Threading: For handling concurrent client requests.
- * Locks: To protect shared data structures from race conditions.
- * Semaphores: For robust thread synchronization.
- * Cache: Implemented with an LRU (Least Recently Used) algorithm to store and retrieve web content efficiently.
-Current Limitations
-While powerful, this project currently has a few limitations:
- * Complex URLs and Caching: If a single URL triggers multiple internal client requests (e.g., for different resources), our cache might store each response as a separate entry. This can lead to incomplete page rendering if only a portion of the cached content is retrieved.
- * Fixed Cache Element Size: The cache elements have a fixed size, meaning very large web pages or resources might not be fully stored.
-Future Enhancements
-This project offers several avenues for further development:
- * Multiprocessing Implementation: Shifting to a multiprocessing model could offer true parallelism and potentially higher performance.
- * Advanced Content Filtering: Expanding the code to allow for more sophisticated website whitelisting or blacklisting rules.
- * POST Request Support: Adding support for HTTP POST requests to handle form submissions and other data-sending operations.
-Getting Started
-Ready to run your own proxy server? Follow these simple steps:
- * Clone the repository:
-   git clone https://github.com/Dhruvkoshta/Web-Server-in-C.git
+# My C-Powered Web Server: A Fun Dive into Proxies & Caching!
 
- * Navigate into the directory:
-   cd Web-Server-in-C.
+Hey there! So, this project is basically my take on building a web server in C, with a special focus on making it work as a proxy. I even borrowed some cool HTTP parsing ideas from this awesome Proxy Server repo.
+Let's Break It Down: What's This Project All About?
 
- * Build the project:
-   make all
+### How Our Proxy Server Works (in a Nutshell)
 
- * Run the proxy server:
-   ./proxy <port no.>
+**Think of our proxy as a friendly middleman. When you ask for a webpage, it steps in, grabs your request, sends it off to the real server, and then brings the server's reply right back to you. Simple, right?**
 
-   Replace <port no.> with your desired port (e.g., ./proxy 8080).
-Once the server is running, you can access websites through it by configuring your browser or by using a URL format like this:
+(Imagine a cool diagram here showing the flow, like the one in the original docs!)
+
+### Why Multi-threading? And Why Semaphores?
+
+To handle all your requests without breaking a sweat, we've made our server multi-threaded. Now, you might think of "condition variables" for this, but we went with Semaphores. **Why**?
+
+    pthread_join() can be a bit finicky, needing to know exactly which thread to wait for.
+
+    Semaphores (sem_wait() and sem_post()) are way more chill – they don't need any specific thread info, making our concurrency setup smoother and more flexible.
+
+### Why Did I Even Make This? (And What's So Cool About Proxies?)
+
+**This project isn't just code; it's a learning adventure! Here's what you'll get out of it, and why proxies are actually pretty neat:**
+
+    Get the "Aha!" Moment:
+
+        Finally understand the secret life of your web requests.
+
+        See how a server handles a crowd of clients all at once.
+
+        Figure out why "locking" is so important when things are happening concurrently.
+
+        Dive into the magic of caching – how browsers use it to make your life easier.
+
+    Proxy Power-Ups:
+
+        Speed Demon: Proxies can seriously speed up how fast you get content, and they ease the load on busy servers, especially with smart caching.
+
+        Gatekeeper: Want to block certain websites? A proxy can totally do that!
+
+        Secret Agent: A well-set-up proxy can hide your real IP address, giving you more privacy. Plus, they can even encrypt your requests to keep snoopers away!
+
+### The Techy Bits: OS Goodies We Used
+
+We tapped into some core operating system concepts to make this happen:
+
+    Threading: For handling multiple users at the same time.
+
+    Locks: To keep things orderly and prevent chaos when threads share stuff.
+
+    Semaphores: Our go-to for keeping threads in sync.
+
+    Cache: We built a smart cache using the LRU (Least Recently Used) algorithm – it's like a memory for frequently visited sites, making them load faster next time!
+
+What's Not So Perfect (Yet!)
+
+Every project has its quirks, and mine's no different:
+
+    Tricky URLs: If a single website address secretly triggers a bunch of other requests (like for images or scripts), our cache might save each piece separately. This can sometimes mean a website doesn't load fully from the cache, which is a bummer.
+
+    Fixed Cache Size: Our cache elements have a set size. So, if you try to cache a super-duper-huge website, it might not all fit.
+
+How We Can Make It Even Better!
+
+This project is just the beginning! Here are some cool ways we could expand it:
+
+    Go Parallel with Multiprocessing: Right now, we're multi-threaded. Switching to multiprocessing could make things even faster by truly running tasks in parallel.
+
+    Smarter Content Blocking: We could add more advanced rules to decide which websites are allowed and which aren't.
+
+    Handle POST Requests: Currently, it mostly deals with simple "GET" requests. Adding support for "POST" (like when you submit a form) would make it way more versatile.
+
+Ready to Play? Here's How to Run It!
+
+Getting this proxy server running is a breeze. Just follow these steps:
+
+    Grab the code:
+
+    git clone https://github.com/Dhruvkoshta/Web-Server-in-C.git
+
+
+    Jump into the folder:
+
+    cd Web-Server-in-C.
+
+
+    Compile everything:
+
+    make all
+
+
+    Fire up the server!
+
+    ./proxy <port no.>
+
+
+    (Pick any port you like, e.g., ./proxy 8080)
+
+Once it's running, open your favorite browser and head to:
+
 http://localhost:port/https://www.cs.princeton.edu/
-Important Notes
- * This proxy server is designed to run specifically on Linux machines.
- * Disable your browser's cache when testing to ensure you're seeing the proxy's caching behavior.
- * To run the proxy without the cache, you'll need to adjust the Makefile to compile proxy_server_without_cache.c instead of proxy_server_with_cache.c. Simply change the filename reference in the Makefile.
-Demo
-Observe the caching in action:
- * When you first access a website through the proxy, you'll see a url not found message, indicating a cache miss.
- * Subsequent visits to the same website will print Data is retrieved from the cache, confirming the content was served from the proxy's cache.
 
+A Couple of Quick Pointers:
+
+    This code is built for Linux machines, so keep that in mind!
+
+    To really see the cache in action, make sure you turn off your browser's own cache first.
+
+    If you want to run the proxy without caching, just tweak the Makefile to use proxy_server_without_cache.c instead of proxy_server_with_cache.c.
+
+See It in Action: The Cache Demo!
+
+Watch the magic happen with this quick demo:
+
+(Imagine a cool screenshot here showing the cache messages!)
+
+    First Time's the Charm (or Miss!): When you visit a site for the very first time, you'll see a message like url not found – that means it's a cache miss.
+
+    Second Time's the Win!: But if you visit that same site again, you'll see Data is retrieved from the cache. Boom! Instant gratification, thanks to caching.
+
+Happy coding
